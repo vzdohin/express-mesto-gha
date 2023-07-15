@@ -16,7 +16,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(STATUS_CODE_CREATED).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -27,7 +27,7 @@ module.exports.getAllCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(STATUS_CODE_OK).send({ data: cards }))
     .catch((err) => {
-      if (err.name === 'CastomError') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -44,7 +44,7 @@ module.exports.deleteCardById = (req, res) => {
       res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastomError') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -64,7 +64,7 @@ module.exports.likeCard = (req, res) => {
       res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -84,7 +84,7 @@ module.exports.dislikeCard = (req, res) => {
       res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });

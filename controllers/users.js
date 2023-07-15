@@ -14,7 +14,7 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(STATUS_CODE_CREATED).send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -25,7 +25,7 @@ module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(STATUS_CODE_OK).send({ data: users }))
     .catch((err) => {
-      if (err.name === 'CastomError') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -38,11 +38,10 @@ module.exports.getUserById = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден' });
-      }
-      res.status(STATUS_CODE_OK).send({ data: user });
+      } res.status(STATUS_CODE_OK).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastomError') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -54,7 +53,7 @@ module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => res.status(STATUS_CODE_OK).send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
@@ -66,7 +65,7 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((ava) => res.status(STATUS_CODE_OK).send({ data: ava }))
     .catch((err) => {
-      if (err.name === 'CastomError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
       } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
     });
