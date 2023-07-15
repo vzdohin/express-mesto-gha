@@ -14,16 +14,19 @@ app.use((req, res, next) => {
   };
   next();
 });
+
 // мидлвэр обработки JSON
 app.use(express.json());
-// мидлвэр боди парсер
-app.use(bodyParser.json());
+
+app.use(require('./routes/users'));
+app.use(require('./routes/cards'));
 
 app.use('*', (req, res) => {
   res.status(ERROR_NOT_FOUND).json({ message: 'Страница не найдена' });
 });
-app.use(require('./routes/users'));
-app.use(require('./routes/cards'));
+
+// мидлвэр боди парсер
+app.use(bodyParser.json());
 
 // соединение с сервером
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
