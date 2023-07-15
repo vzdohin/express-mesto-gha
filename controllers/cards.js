@@ -18,7 +18,7 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
-      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -29,7 +29,7 @@ module.exports.getAllCards = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
-      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -46,7 +46,7 @@ module.exports.deleteCardById = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
-      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -66,7 +66,7 @@ module.exports.likeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
-      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
@@ -86,6 +86,6 @@ module.exports.dislikeCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({ message: 'Переданы некоректные данные' });
-      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка' });
+      } return res.status(ERROR_INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };

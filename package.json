@@ -10,7 +10,7 @@
     "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Alexandr Ohin",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.44.0",
