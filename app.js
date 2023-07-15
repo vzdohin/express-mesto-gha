@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { ERROR_NOT_FOUND } = require('./errors/errors');
 
 const { PORT = 3000 } = process.env;
 
@@ -13,14 +14,16 @@ app.use((req, res, next) => {
   };
   next();
 });
-
 // мидлвэр обработки JSON
 app.use(express.json());
-app.use(require('./routes/users'));
-app.use(require('./routes/cards'));
-
 // мидлвэр боди парсер
 app.use(bodyParser.json());
+
+app.use('*', (req, res) => {
+  res.status(ERROR_NOT_FOUND).json({ message: 'Страница не найдена' });
+});
+app.use(require('./routes/users'));
+app.use(require('./routes/cards'));
 
 // соединение с сервером
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
