@@ -1,8 +1,13 @@
 /* eslint-disable no-console */
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { ERROR_NOT_FOUND } = require('./errors/errors');
+const {
+  createUser,
+  login,
+} = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -15,6 +20,11 @@ app.use((req, res, next) => {
   };
   next();
 });
+
+// мидлвэры авторизации и создания пользователя
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 // мидлвэр обработки JSON
 app.use(express.json());
