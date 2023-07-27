@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const {
-  ERROR_BAD_REQUEST,
+  ERROR_UNAUTHORIZED,
 } = require('../errors/errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -9,7 +9,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer')) {
-    return res.status(ERROR_BAD_REQUEST).send({ message: 'Необходима авторизация' });
+    return res.status(ERROR_UNAUTHORIZED).send({ message: 'Необходима авторизация' });
   }
   const token = authorization.replace('Bearer', '');
   let payload;
@@ -19,6 +19,6 @@ module.exports = (req, res, next) => {
     req.user = payload;
     next();
   } catch (err) {
-    return res.status(ERROR_BAD_REQUEST).send({ message: 'Необходима авторизация' });
+    return res.status(ERROR_UNAUTHORIZED).send({ message: 'Ошибка авторизации' });
   }
 };
