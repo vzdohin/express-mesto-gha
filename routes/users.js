@@ -13,8 +13,8 @@ router.get('/users/me', getMyProfile);
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string()
-      .regex(/^[a-zA-Z][0-9]+$/)
       .length(24)
+      .hex()
       .required(),
   }),
 }), getUserById);
