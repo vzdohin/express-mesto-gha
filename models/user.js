@@ -8,16 +8,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       minlength: 2,
       maxlength: 30,
+      required: false,
       defoult: 'Жак-Ив Кусто',
     },
     about: {
       type: String,
       minlength: 2,
       maxlength: 30,
+      required: false,
       defoult: 'Исследователь',
     },
     avatar: {
       type: String,
+      required: false,
       defoult: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         // eslint-disable-next-line no-useless-escape
