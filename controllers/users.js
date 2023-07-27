@@ -26,7 +26,7 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
         })
-        .status(STATUS_CODE_OK).send({ message: 'Авторизация прошла успешно' });
+        .status(STATUS_CODE_OK).json({ message: 'Авторизация прошла успешно' });
     })
     .catch(next);
 };
@@ -54,7 +54,7 @@ module.exports.createUser = (req, res, next) => {
         })
           .then((user) => res
             .status(STATUS_CODE_CREATED)
-            .send({
+            .json({
               _id: user._id,
               name: user.name,
               about: user.about,
@@ -81,7 +81,7 @@ module.exports.getUsers = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователи не найдены');
     })
-    .then((users) => res.status(STATUS_CODE_OK).send({ data: users }))
+    .then((users) => res.status(STATUS_CODE_OK).json({ data: users }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некоректные данные'));
@@ -98,7 +98,7 @@ module.exports.getUserById = (req, res, next) => {
       throw new NotFoundError('Пользователь не найден');
     })
     .then((user) => {
-      if (!user) { res.status(STATUS_CODE_OK).send({ data: user }); }
+      if (!user) { res.status(STATUS_CODE_OK).json({ data: user }); }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -113,7 +113,7 @@ module.exports.getMyProfile = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
-    .then((user) => { res.status(STATUS_CODE_OK).send({ data: user }); })
+    .then((user) => { res.status(STATUS_CODE_OK).json({ data: user }); })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некоректные данные'));
@@ -128,7 +128,7 @@ module.exports.updateProfile = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
-    .then((user) => res.status(STATUS_CODE_OK).send({ data: user }))
+    .then((user) => res.status(STATUS_CODE_OK).json({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некоректные данные'));
@@ -144,7 +144,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
-    .then((ava) => res.status(STATUS_CODE_OK).send({ data: ava }))
+    .then((ava) => res.status(STATUS_CODE_OK).json({ data: ava }))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некоректные данные'));
