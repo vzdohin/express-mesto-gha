@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
-const { ERROR_NOT_FOUND, handleOtherErrors } = require('./errors/errors');
+const { ERROR_NOT_FOUND } = require('./errors/errors');
+const handleOtherErrors = require('./errors/handleOtherErrors');
 const {
   createUser,
   login,

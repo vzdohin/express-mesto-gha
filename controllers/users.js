@@ -19,15 +19,15 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then(({ user }) => {
+    .then((user) => {
       // console.log(userId);
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'super-strong-secret-key', { expiresIn: '7d' });
       res
-        // .cookie('jwt', token, {
-        //   maxAge: 3600000 * 24 * 7,
-        //   httpOnly: true,
-        //   sameSite: true,
-        // })
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: true,
+        })
         .status(STATUS_CODE_OK)
         .send({
           // _id: user._id,
@@ -35,7 +35,7 @@ module.exports.login = (req, res, next) => {
           // about: user.about,
           // avatar: user.avatar,
           // email: user.email,
-          token,
+          jwt: token,
         });
     })
     .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
@@ -58,23 +58,23 @@ module.exports.createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => {
-      res.status(STATUS_CODE_CREATED)
-        .send(
-          // name: user.name,
-          // about: user.about,
-          // avatar: user.avatar,
-          // email: user.email,
-          user.toJSON(),
-        );
+    .then(() => {
+      res.status(STATUS_CODE_CREATED).send({
+        data: {
+          name,
+          about,
+          avatar,
+          email,
+        },
+      });
     })
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConfictRequestError('Email уже используется'));
       }
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      }
+      // if (err.name === 'ValidationError') {
+      //   next(new BadRequestError('Переданы некоректные данные'));
+      // }
       next(err);
     });
 };

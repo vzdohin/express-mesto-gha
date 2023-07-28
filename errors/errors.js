@@ -50,16 +50,17 @@ class UnauthorizedError extends Error {
   }
 }
 
-function handleOtherErrors(err, req, res) {
-  const { statusCode = 500, message } = err;
-  res
-    .status(ERROR_INTERNAL_SERVER_ERROR)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-}
+// const handleOtherErrors = (err, req, res) => {
+//   const { statusCode = 500, message } = err;
+//   res
+//     .status(ERROR_INTERNAL_SERVER_ERROR)
+//     .send({
+//       message: statusCode === 500
+//         ? 'На сервере произошла ошибка'
+//         : message,
+//     });
+// },
+
 module.exports = {
   STATUS_CODE_OK,
   STATUS_CODE_CREATED,
@@ -69,7 +70,7 @@ module.exports = {
   ERROR_NOT_FOUND,
   ERROR_CONFLICT_REQUEST,
   ERROR_INTERNAL_SERVER_ERROR,
-  handleOtherErrors,
+  // handleOtherErrors,
   BadRequestError,
   ForbiddenError,
   NotFoundError,
