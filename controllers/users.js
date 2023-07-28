@@ -118,11 +118,7 @@ module.exports.getMyProfile = (req, res, next) => {
       throw new NotFoundError('Пользователь не найден');
     })
     .then((user) => { res.status(STATUS_CODE_OK).send({ data: user }); })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      } next(err);
-    });
+    .catch(next);
 };
 
 // обновить информацию профиля
