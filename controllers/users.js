@@ -23,18 +23,19 @@ module.exports.login = (req, res, next) => {
       // console.log(userId);
       const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
       res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-        })
+        // .cookie('jwt', token, {
+        //   maxAge: 3600000 * 24 * 7,
+        //   httpOnly: true,
+        //   sameSite: true,
+        // })
         .status(STATUS_CODE_OK)
         .send({
-          _id: user._id,
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
+          // _id: user._id,
+          // name: user.name,
+          // about: user.about,
+          // avatar: user.avatar,
+          // email: user.email,
+          token,
         });
     })
     .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
@@ -58,12 +59,14 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     .then((user) => {
-      res.status(STATUS_CODE_CREATED).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      res.status(STATUS_CODE_CREATED)
+        .send(
+          // name: user.name,
+          // about: user.about,
+          // avatar: user.avatar,
+          // email: user.email,
+          user.toJSON(),
+        );
     })
     .catch((err) => {
       if (err.code === 11000) {
