@@ -72,8 +72,8 @@ module.exports.createUser = (req, res, next) => {
 // получить всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200).send({ users }))
-    .catch(next);
+    .then((users) => res.status(STATUS_CODE_OK).send({ users }))
+    .catch(() => next(new UnauthorizedError('Вы не авторизованы ')));
 };
 
 // получить пользователя по айди
