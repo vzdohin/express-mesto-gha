@@ -48,7 +48,7 @@ module.exports.getAllCards = (req, res, next) => {
 // // удалить карточку
 module.exports.deleteCardById = (req, res, next) => {
   const { cardId } = req.params;
-  const userId = req.user._id;
+  const { userId } = req.user;
   Card.findByIdAndRemove(cardId)
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
@@ -71,7 +71,7 @@ module.exports.deleteCardById = (req, res, next) => {
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: req.user.userId } },
     { new: true },
   )
     .orFail(() => {
@@ -92,7 +92,7 @@ module.exports.likeCard = (req, res, next) => {
 module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: req.user.userId } },
     { new: true },
   )
     .orFail(() => {
