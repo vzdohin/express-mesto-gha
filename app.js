@@ -18,8 +18,8 @@ const app = express();
 
 // мидлвэр обработки JSON
 app.use(express.json());
-// мидлвэры авторизации и создания пользователя
 
+// мидлвэры авторизации и создания пользователя
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),

@@ -17,7 +17,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // логин
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  // console.log(User.findUserByCredentials(email, password));
+
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
@@ -41,7 +41,7 @@ module.exports.createUser = (req, res, next) => {
     password,
   } = req.body;
   // хешируем пароль
-  if (!password) throw new BadRequestError('Переданы некоректные данные');
+  // if (!password) throw new BadRequestError('Переданы некоректные данные');
   bcrypt.hash(password, 10)
     .then(
       (hash) => {
@@ -52,21 +52,20 @@ module.exports.createUser = (req, res, next) => {
           email,
           password: hash,
         })
-          .then((user) => res
-            .status(STATUS_CODE_CREATED)
+          .then((user) => res.status(STATUS_CODE_CREATED)
             .send({
-              _id: user._id,
+              // _id: user._id,
               name: user.name,
               about: user.about,
               avatar: user.avatar,
               email: user.email,
             }))
           .catch((err) => {
-            if (err.name === 'ValidationError') {
-              next(new BadRequestError('Переданы некоректные данные'));
-            }
             if (err.code === 11000) {
               next(new ConfictRequestError('Email уже используется'));
+            }
+            if (err.name === 'ValidationError') {
+              next(new BadRequestError('Переданы некоректные данные'));
             }
             next(err);
           });
