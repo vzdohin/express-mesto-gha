@@ -19,10 +19,10 @@ const app = express();
 // мидлвэр обработки JSON
 app.use(express.json());
 
-app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Content-Type', 'application/json');
+//   next();
+// });
 // мидлвэры авторизации и создания пользователя
 app.post('/signin', celebrate({
   body: Joi.object().keys({
