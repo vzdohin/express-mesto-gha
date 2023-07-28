@@ -55,11 +55,13 @@ module.exports.createUser = (req, res, next) => {
         })
           .then((user) => res.status(STATUS_CODE_CREATED)
             .send({
-              // _id: user._id,
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-              email: user.email,
+              message: 'Пользователь успешно создан',
+              data: {
+                name: user.name,
+                about: user.about,
+                avatar: user.avatar,
+                email: user.email,
+              },
             }))
           .catch((err) => {
             if (err.code === 11000) {
