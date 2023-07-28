@@ -1,7 +1,6 @@
+/* eslint-disable no-unused-expressions */
 const jwt = require('jsonwebtoken');
-const {
-  ERROR_UNAUTHORIZED,
-} = require('../errors/errors');
+const { UnauthorizedError } = require('../errors/errors');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -9,16 +8,17 @@ const {
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer')) {
-    return res.status(ERROR_UNAUTHORIZED).send({ message: 'Необходима авторизация' });
+    () => next(new UnauthorizedError('Необходима авторизация'));
   }
   const token = authorization.replace('Bearer ', '');
+
   let payload;
   try {
     // eslint-disable-next-line no-unused-vars
     payload = jwt.verify(token, 'super-strong-secret-key');
     req.user = payload;
   } catch (err) {
-    return res.status(ERROR_UNAUTHORIZED).send({ message: 'Ошибка авторизации' });
+    () => next(new UnauthorizedError('Ошибка авторизации'));
   }
   return next();
 };
