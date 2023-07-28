@@ -9,7 +9,7 @@ const {
   BadRequestError,
   NotFoundError,
   ConfictRequestError,
-  // UnauthorizedError,
+  UnauthorizedError,
 } = require('../errors/errors');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
@@ -19,9 +19,9 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => {
-      console.log(user);
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
+    .then(({ _id: userId }) => {
+      // console.log(userId);
+      const token = jwt.sign({ userId }, 'super-strong-secret', { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
@@ -29,7 +29,7 @@ module.exports.login = (req, res, next) => {
         })
         .status(STATUS_CODE_OK).send({ token });
     })
-    .catch(next);
+    .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
 };
 
 // создать пользователя
@@ -53,16 +53,16 @@ module.exports.createUser = (req, res, next) => {
           email,
           password: hash,
         })
-          .then((user) => res.status(STATUS_CODE_CREATED)
-            .send({
-              message: 'Пользователь успешно создан',
-              data: {
-                name: user.name,
-                about: user.about,
-                avatar: user.avatar,
-                email: user.email,
-              },
-            }))
+          .then((user) => {
+            const { _id } = user;
+            return res.status(STATUS_CODE_CREATED).send({
+              name,
+              about,
+              avatar,
+              email,
+              _id,
+            });
+          })
           .catch((err) => {
             if (err.code === 11000) {
               next(new ConfictRequestError('Email уже используется'));
