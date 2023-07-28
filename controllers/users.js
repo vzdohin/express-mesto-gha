@@ -19,9 +19,9 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => {
+    .then(({ _id: userId }) => {
       // console.log(userId);
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ userId }, 'super-strong-secret-key', { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
@@ -35,7 +35,7 @@ module.exports.login = (req, res, next) => {
           // about: user.about,
           // avatar: user.avatar,
           // email: user.email,
-          jwt: token,
+          token,
         });
     })
     .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
@@ -97,7 +97,7 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить пользователя по айди
 module.exports.getUserById = (req, res, next) => {
-  const userId = req.params.id ? req.params.id : req.user._id;
+  const userId = req.params.id;
   User.findById(userId)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
@@ -110,16 +110,17 @@ module.exports.getUserById = (req, res, next) => {
     });
 };
 // // получить данные профиля
-// module.exports.getMyProfile = (req, res, next) => {
-//   const userId = req.user._id;
-//   User.findById(userId)
-//     .then((user) => {
-//       if (!user) {
-//         throw new NotFoundError('Пользователь не найден');
-//       } return res.status(STATUS_CODE_OK).send(user);
-//     })
-//     .catch(next);
-// };
+module.exports.getMyProfile = (req, res, next) => {
+  const { userId } = req.user;
+  // console.log(req);
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } return res.status(STATUS_CODE_OK).send(user);
+    })
+    .catch(next);
+};
 
 // обновить информацию профиля
 module.exports.updateProfile = (req, res, next) => {

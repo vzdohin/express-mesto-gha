@@ -3,13 +3,13 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers,
   getUserById,
-  // getMyProfile,
+  getMyProfile,
   updateProfile,
   updateAvatar,
 } = require('../controllers/users');
 
 router.get('/users', getUsers);
-router.get('/users/me', getUserById);
+router.get('/users/me', getMyProfile);
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
