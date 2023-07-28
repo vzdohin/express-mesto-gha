@@ -82,34 +82,18 @@ module.exports.createUser = (req, res, next) => {
 // получить всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .orFail(() => {
-      throw new NotFoundError('Пользователи не найдены');
-    })
-    .then((users) => res.status(STATUS_CODE_OK).send({ data: users }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      }
-      next(err);
-    });
+    // .orFail(() => {
+    //   throw new NotFoundError('Пользователи не найдены');
+    // })
+    .then((users) => res.status(STATUS_CODE_OK).send(users))
+    // .catch((err) => {
+    //   if (err.name === 'CastError') {
+    //     next(new BadRequestError('Переданы некоректные данные'));
+    //   }
+    //   next(err);
+    // });
+    .catch(next);
 };
-
-// // получить пользователя по айди
-// module.exports.getUserById = (req, res, next) => {
-//   const { userId } = req.params;
-//   User.findById(userId)
-//     .orFail()
-//     .then((user) => {
-//       res
-//         .status(STATUS_CODE_OK)
-//         .send({ data: user });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequestError('Переданы некоректные данные'));
-//       } next(err);
-//     });
-// };
 
 // получить пользователя по айди
 module.exports.getUserById = (req, res, next) => {
@@ -131,15 +115,12 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.getMyProfile = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
-    .orFail(() => {
-      throw new NotFoundError('Пользователь не найден');
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } return res.status(STATUS_CODE_OK).send(user);
     })
-    .then((user) => { res.status(STATUS_CODE_OK).send({ data: user }); })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      } next(err);
-    });
+    .catch(next);
 };
 
 // обновить информацию профиля
