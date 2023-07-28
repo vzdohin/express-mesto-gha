@@ -19,15 +19,23 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then(({ _id: userId }) => {
+    .then(({ user }) => {
       // console.log(userId);
-      const token = jwt.sign({ userId }, 'super-strong-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'super-strong-secret', { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
+          sameSite: true,
         })
-        .status(STATUS_CODE_OK).send({ token });
+        .status(STATUS_CODE_OK)
+        .send({
+          _id: user._id,
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        });
     })
     .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
 };
@@ -43,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
   } = req.body;
   // хешируем пароль
   // if (!password) throw new BadRequestError('Переданы некоректные данные');
-  bcrypt.hash(password, 10)
+  return bcrypt.hash(password, 10)
     .then(
       (hash) => {
         User.create({
@@ -54,13 +62,11 @@ module.exports.createUser = (req, res, next) => {
           password: hash,
         })
           .then((user) => {
-            const { _id } = user;
-            return res.status(STATUS_CODE_CREATED).send({
-              name,
-              about,
-              avatar,
-              email,
-              _id,
+            res.status(STATUS_CODE_CREATED).send({
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+              email: user.email,
             });
           })
           .catch((err) => {
