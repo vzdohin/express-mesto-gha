@@ -21,7 +21,6 @@ const {
 // создать карточку
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
-  console.log(req);
   // const owner = req.user._id;
   Card.create({ name, link, owner: req.user.userId })
     .then((card) => res.status(STATUS_CODE_CREATED).send({ data: card }))
@@ -47,17 +46,15 @@ module.exports.getAllCards = (req, res, next) => {
 
 // // удалить карточку
 module.exports.deleteCardById = (req, res, next) => {
-  const { cardId } = req.params;
-  const { userId } = req.user;
-  Card.findByIdAndRemove(cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError('Карточка не найдена');
     })
     .then((card) => {
-      if (card.userId.toString() !== userId.toString()) {
+      if (card.owner.toString() !== req.user.userId) {
         next(new ForbiddenError('У Вас нет прав для удаления этой карточки'));
       }
-      res.status(STATUS_CODE_OK).send({ data: card });
+      res.status(STATUS_CODE_OK).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
