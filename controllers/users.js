@@ -29,14 +29,7 @@ module.exports.login = (req, res, next) => {
           sameSite: true,
         })
         .status(STATUS_CODE_OK)
-        .send({
-          // _id: user._id,
-          // name: user.name,
-          // about: user.about,
-          // avatar: user.avatar,
-          // email: user.email,
-          token,
-        });
+        .send({ token });
     })
     .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
 };
@@ -72,9 +65,6 @@ module.exports.createUser = (req, res, next) => {
       if (err.code === 11000) {
         next(new ConfictRequestError('Email уже используется'));
       }
-      // if (err.name === 'ValidationError') {
-      //   next(new BadRequestError('Переданы некоректные данные'));
-      // }
       next(err);
     });
 };
@@ -82,16 +72,7 @@ module.exports.createUser = (req, res, next) => {
 // получить всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    // .orFail(() => {
-    //   throw new NotFoundError('Пользователи не найдены');
-    // })
     .then((users) => res.status(200).send({ users }))
-    // .catch((err) => {
-    //   if (err.name === 'CastError') {
-    //     next(new BadRequestError('Переданы некоректные данные'));
-    //   }
-    //   next(err);
-    // });
     .catch(next);
 };
 

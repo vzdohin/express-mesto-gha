@@ -14,8 +14,6 @@ const {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
-  ConfictRequestError,
-  UnauthorizedError,
 } = require('../errors/errors');
 
 // создать карточку
@@ -37,9 +35,6 @@ module.exports.getAllCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(STATUS_CODE_OK).send({ data: cards }))
     .catch((err) => {
-      // if (err.name === 'CastError' || err.name === 'ValidationError') {
-      //   next(new BadRequestError('Переданы некоректные данные'));
-      // }
       next(err);
     });
 };

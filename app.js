@@ -20,10 +20,6 @@ const app = express();
 // мидлвэр обработки JSON
 app.use(express.json());
 
-// app.use((req, res, next) => {
-//   res.setHeader('Content-Type', 'application/json');
-//   next();
-// });
 // мидлвэры авторизации и создания пользователя
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -70,10 +66,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 app.use(errors());
 app.use(handleOtherErrors);
 
-// app.use((req, res, next) => {
-//   res.setHeader('Content-Type', 'application/json');
-//   next();
-// });
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });
