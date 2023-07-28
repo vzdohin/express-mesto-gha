@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const { celebrate, Joi } = require('celebrate');
 const { ERROR_NOT_FOUND } = require('./errors/errors');
-const handleOtherErrors = require('./errors/handleOtherErrors');
+const { handleOtherErrors } = require('./errors/handleOtherErrors');
 const {
   createUser,
   login,
@@ -70,6 +70,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
 app.use(errors());
 app.use(handleOtherErrors);
 
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json');
+  next();
+});
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });
