@@ -97,7 +97,8 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить пользователя по айди
 module.exports.getUserById = (req, res, next) => {
-  const userId = req.params.id;
+  const { userId } = req.user;
+
   User.findById(userId)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
@@ -112,7 +113,7 @@ module.exports.getUserById = (req, res, next) => {
 // // получить данные профиля
 module.exports.getMyProfile = (req, res, next) => {
   const { userId } = req.user;
-  // console.log(req);
+
   User.findById(userId)
     .then((user) => {
       if (!user) {
@@ -125,7 +126,8 @@ module.exports.getMyProfile = (req, res, next) => {
 // обновить информацию профиля
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  console.log(req);
+  User.findByIdAndUpdate(req.user.userId, { name, about }, { new: true, runValidators: true })
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })
@@ -141,7 +143,7 @@ module.exports.updateProfile = (req, res, next) => {
 // обновить аватар
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user.userId, { avatar }, { new: true, runValidators: true })
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
     })

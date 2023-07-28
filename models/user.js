@@ -8,17 +8,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       minlength: 2,
       maxlength: 30,
-      defoult: 'Жак-Ив Кусто',
+      default: 'Жак-Ив Кусто',
     },
     about: {
       type: String,
       minlength: 2,
       maxlength: 30,
-      defoult: 'Исследователь',
+      default: 'Исследователь',
     },
     avatar: {
       type: String,
-      defoult: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         // eslint-disable-next-line no-useless-escape
         validator: (value) => value.match(/^(http|https):\/\/(?:www\.)?[a-zA-Z0-9\.\-]+\/[a-zA-Z0-9\.\-_~:\/?#\[\]@!$&'()*+,;=]+/gi) !== null,
