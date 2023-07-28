@@ -85,7 +85,7 @@ module.exports.getUsers = (req, res, next) => {
     // .orFail(() => {
     //   throw new NotFoundError('Пользователи не найдены');
     // })
-    .then((users) => res.status(STATUS_CODE_OK).send(users))
+    .then((users) => res.status(200).send(users))
     // .catch((err) => {
     //   if (err.name === 'CastError') {
     //     next(new BadRequestError('Переданы некоректные данные'));
@@ -97,13 +97,11 @@ module.exports.getUsers = (req, res, next) => {
 
 // получить пользователя по айди
 module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
+  const userId = req.params.id ? req.params.id : req.user._id;
   User.findById(userId)
-    .orFail(() => {
-      throw new NotFoundError('Пользователь не найден');
-    })
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
-      if (user) { res.status(STATUS_CODE_OK).send({ data: user }); }
+      if (user) { res.status(STATUS_CODE_OK).send(user); }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -111,17 +109,17 @@ module.exports.getUserById = (req, res, next) => {
       } next(err);
     });
 };
-// получить данные профиля
-module.exports.getMyProfile = (req, res, next) => {
-  const userId = req.user._id;
-  User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь не найден');
-      } return res.status(STATUS_CODE_OK).send(user);
-    })
-    .catch(next);
-};
+// // получить данные профиля
+// module.exports.getMyProfile = (req, res, next) => {
+//   const userId = req.user._id;
+//   User.findById(userId)
+//     .then((user) => {
+//       if (!user) {
+//         throw new NotFoundError('Пользователь не найден');
+//       } return res.status(STATUS_CODE_OK).send(user);
+//     })
+//     .catch(next);
+// };
 
 // обновить информацию профиля
 module.exports.updateProfile = (req, res, next) => {
