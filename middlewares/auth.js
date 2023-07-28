@@ -3,7 +3,7 @@ const {
   ERROR_UNAUTHORIZED,
 } = require('../errors/errors');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+// const { NODE_ENV, JWT_SECRET } = process.env;
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
@@ -11,14 +11,15 @@ module.exports = (req, res, next) => {
   if (!authorization || !authorization.startsWith('Bearer')) {
     return res.status(ERROR_UNAUTHORIZED).send({ message: 'Необходима авторизация' });
   }
-  const token = authorization.replace('Bearer', '');
+  const token = authorization.replace('Bearer ', '');
   let payload;
   try {
     // eslint-disable-next-line no-unused-vars
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
-    req.user = payload;
+    payload = jwt.verify(token, 'super-strong-secret-key');
     next();
   } catch (err) {
     return res.status(ERROR_UNAUTHORIZED).send({ message: 'Ошибка авторизации' });
   }
+  req.user = payload;
+  return next();
 };

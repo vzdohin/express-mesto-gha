@@ -85,7 +85,7 @@ module.exports.getUsers = (req, res, next) => {
     // .orFail(() => {
     //   throw new NotFoundError('Пользователи не найдены');
     // })
-    .then((users) => res.status(200).send(users))
+    .then((users) => res.status(200).send({ users }))
     // .catch((err) => {
     //   if (err.name === 'CastError') {
     //     next(new BadRequestError('Переданы некоректные данные'));
@@ -101,7 +101,7 @@ module.exports.getUserById = (req, res, next) => {
   User.findById(userId)
     .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
-      if (user) { res.status(STATUS_CODE_OK).send(user); }
+      if (user) { res.status(STATUS_CODE_OK).send({ user }); }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
