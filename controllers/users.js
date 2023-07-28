@@ -94,31 +94,15 @@ module.exports.getUsers = (req, res, next) => {
     });
 };
 
-// получить пользователя по айди
-module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
-  User.findById(userId)
-    .orFail()
-    .then((user) => {
-      res
-        .status(STATUS_CODE_OK)
-        .send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      } next(err);
-    });
-};
 // // получить пользователя по айди
 // module.exports.getUserById = (req, res, next) => {
 //   const { userId } = req.params;
 //   User.findById(userId)
-//     .orFail(() => {
-//       throw new NotFoundError('Пользователь не найден');
-//     })
+//     .orFail()
 //     .then((user) => {
-//       if (!user) { res.status(STATUS_CODE_OK).send({ data: user }); }
+//       res
+//         .status(STATUS_CODE_OK)
+//         .send({ data: user });
 //     })
 //     .catch((err) => {
 //       if (err.name === 'CastError') {
@@ -126,6 +110,23 @@ module.exports.getUserById = (req, res, next) => {
 //       } next(err);
 //     });
 // };
+
+// получить пользователя по айди
+module.exports.getUserById = (req, res, next) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
+    })
+    .then((user) => {
+      if (user) { res.status(STATUS_CODE_OK).send({ data: user }); }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некоректные данные'));
+      } next(err);
+    });
+};
 // получить данные профиля
 module.exports.getMyProfile = (req, res, next) => {
   const userId = req.user._id;
