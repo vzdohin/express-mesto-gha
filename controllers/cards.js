@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(STATUS_CODE_CREATED).send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);
@@ -37,9 +37,9 @@ module.exports.getAllCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.status(STATUS_CODE_OK).send({ data: cards }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некоректные данные'));
-      }
+      // if (err.name === 'CastError' || err.name === 'ValidationError') {
+      //   next(new BadRequestError('Переданы некоректные данные'));
+      // }
       next(err);
     });
 };
@@ -56,7 +56,7 @@ module.exports.deleteCardById = (req, res, next) => {
       if (card.userId.toString() !== userId.toString()) {
         next(new ForbiddenError('У Вас нет прав для удаления этой карточки'));
       }
-      res.status(STATUS_CODE_OK).send(card);
+      res.status(STATUS_CODE_OK).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -77,13 +77,10 @@ module.exports.likeCard = (req, res, next) => {
       throw new NotFoundError('Карточка не найдена');
     })
     .then((card) => {
-      if (!card) {
-        return res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
-      }
-      res.status(STATUS_CODE_OK).send(card);
+      res.status(STATUS_CODE_OK).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);
@@ -101,13 +98,10 @@ module.exports.dislikeCard = (req, res, next) => {
       throw new NotFoundError('Карточка не найдена');
     })
     .then((card) => {
-      if (!card) {
-        return res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена' });
-      }
-      res.status(STATUS_CODE_OK).send(card);
+      res.status(STATUS_CODE_OK).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);

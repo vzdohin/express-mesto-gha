@@ -26,7 +26,7 @@ module.exports.login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
         })
-        .status(STATUS_CODE_OK).send({ message: 'Авторизация прошла успешно' });
+        .status(STATUS_CODE_OK).send({ token });
     })
     .catch(next);
 };
@@ -130,7 +130,7 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .then((user) => res.status(STATUS_CODE_OK).send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);
@@ -146,7 +146,7 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .then((ava) => res.status(STATUS_CODE_OK).send({ data: ava }))
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
+      if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);
