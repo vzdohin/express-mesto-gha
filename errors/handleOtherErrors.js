@@ -1,4 +1,4 @@
-module.exports.handleOtherErrors = (err, req, res) => {
+module.exports.handleOtherErrors = (err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
     .status(statusCode)
@@ -7,4 +7,5 @@ module.exports.handleOtherErrors = (err, req, res) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
+  next();
 };
