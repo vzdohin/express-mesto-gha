@@ -63,7 +63,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConfictRequestError('Email уже используется'));
+        return next(new ConfictRequestError('Email уже используется'));
       }
       next(err);
     });
@@ -73,7 +73,9 @@ module.exports.createUser = (req, res, next) => {
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(STATUS_CODE_OK).send({ users }))
-    .catch(() => next(new UnauthorizedError('Вы не авторизованы ')));
+    .catch(() => {
+      next(new UnauthorizedError('Вы не авторизованы '));
+    });
 };
 
 // получить пользователя по айди
@@ -88,7 +90,7 @@ module.exports.getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некоректные данные'));
+        return next(new BadRequestError('Переданы некоректные данные'));
       } next(err);
     });
 };
@@ -114,7 +116,7 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.status(STATUS_CODE_OK).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некоректные данные'));
+        return next(new BadRequestError('Переданы некорректные данные'));
       }
       next(err);
     });
@@ -130,7 +132,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((ava) => res.status(STATUS_CODE_OK).send({ data: ava }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некоректные данные'));
+        return next(new BadRequestError('Переданы некоректные данные'));
       }
       next(err);
     });
